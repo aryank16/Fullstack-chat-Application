@@ -1,0 +1,41 @@
+default_language_version:
+  python: python3.13
+exclude: docs/API/tms-itas-algorithm-openapi.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: pretty-format-json
+        args:
+          - --autofix
+          - --no-ensure-ascii
+          - --no-sort-keys
+        exclude: frontend/tsconfig.json
+      - id: check-json
+        exclude: frontend/tsconfig.json
+      - id: check-toml
+      - id: check-yaml
+      - id: check-ast
+      - id: debug-statements
+      - id: check-docstring-first
+      - id: check-merge-conflict
+      - id: check-case-conflict
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.17.0
+    hooks:
+      - id: yamlfmt
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.10
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # uv version.
+    rev: 0.8.13
+    hooks:
+      - id: uv-lock
+        files: backend/pyproject.toml
+        args: [--project, backend]
