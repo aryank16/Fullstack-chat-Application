@@ -8,7 +8,7 @@ from datetime import datetime
 from uuid import uuid4
 from typing import List, Dict
 
-from models import Chat, ChatMessage, SendMessageRequest, UpdateChatRequest
+from .models import Chat, ChatMessage, SendMessageRequest, UpdateChatRequest
 
 disable_installed_extensions_check()
 
@@ -65,6 +65,36 @@ def load_chats_from_json():
         chats_data = {}
 
 
+def save_chats_to_json():
+    """Save chats from memory to JSON file"""
+    try:
+        chats_list = []
+        for chat in chats_data.values():
+            chat_dict = {
+                "id": chat.id,
+                "name": chat.name,
+                "messages": [
+                    {
+                        "id": msg.id,
+                        "type": msg.type,
+                        "content": msg.content,
+                        "timestamp": msg.timestamp.isoformat()
+                    }
+                    for msg in chat.messages
+                ],
+                "created_at": chat.created_at.isoformat(),
+                "updated_at": chat.updated_at.isoformat()
+            }
+            chats_list.append(chat_dict)
+        
+        with open("data/chats.json", "w", encoding="utf-8") as f:
+            json.dump(chats_list, f, indent=2, ensure_ascii=False)
+        
+        print(f"Saved {len(chats_data)} chats to JSON")
+    except Exception as e:
+        print(f"Error saving chats: {e}")
+
+
 @app.on_event("startup")
 async def startup_event():
     """Load data on application startup"""
@@ -102,7 +132,37 @@ async def get_chat(chat_id: str):
 
 @app.post("/chats/{chat_id}/stream", response_model=ChatMessage)
 async def send_message(chat_id: str, request: SendMessageRequest):
-    pass
+    """Send a message to a chat and get assistant response"""
+    if chat_id not in chats_data:
+        raise HTTPException(status_code=404, detail="Chat not found")
+    
+    chat = chats_data[chat_id]
+    
+    # Add user message
+    user_message = ChatMessage(
+        id=f"user-{uuid4()}",
+        type="user",
+        content=request.content,
+        timestamp=datetime.now()
+    )
+    
+    # Add assistant response
+    import random
+    assistant_message = ChatMessage(
+        id=f"assistant-{uuid4()}",
+        type="assistant",
+        content=random.choice(MOCK_ASSISTANT_RESPONSES),
+        timestamp=datetime.now()
+    )
+    
+    # Add both messages to the chat
+    chat.messages.extend([user_message, assistant_message])
+    chat.updated_at = datetime.now()
+    
+    # Save updated chat back to JSON
+    save_chats_to_json()
+    
+    return assistant_message
 
 
 @app.post("/chats", response_model=Chat)
@@ -116,6 +176,7 @@ async def create_chat(name: str = "New Chat"):
         updated_at=datetime.now(),
     )
     chats_data[new_chat.id] = new_chat
+    save_chats_to_json()
     return new_chat
 
 
@@ -128,6 +189,7 @@ async def update_chat(chat_id: str, request: UpdateChatRequest):
     chat = chats_data[chat_id]
     chat.name = request.name
     chat.updated_at = datetime.now()
+    save_chats_to_json()
 
     return chat
 
@@ -139,6 +201,7 @@ async def delete_chat(chat_id: str):
         raise HTTPException(status_code=404, detail="Chat not found")
 
     del chats_data[chat_id]
+    save_chats_to_json()
     return {"message": "Chat deleted successfully"}
 
 
