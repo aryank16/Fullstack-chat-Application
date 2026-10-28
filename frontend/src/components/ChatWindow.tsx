@@ -63,7 +63,7 @@ const ChatWindow: React.FC = () => {
         <div className="text-center">
            {/* Logo icon */}
           <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-gray-200 mb-4">
-           <img src="/public/favicon.png" alt="Chat icon" className="h-6 w-6 text-gray-400" />
+           <img src="/favicon.png" alt="Chat icon" className="h-6 w-6 text-gray-400" />
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">Welcome to Eraneos Chat</h3>
           <p className="text-gray-500">Select a chat from the sidebar or create a new one to get started.</p>
@@ -123,9 +123,9 @@ const ChatWindow: React.FC = () => {
               <div className="flex justify-start">
                 <div className="bg-gray-100 rounded-lg p-3 max-w-xs">
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" ></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" ></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" ></div>
                   </div>
                 </div>
               </div>

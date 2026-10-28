@@ -8,7 +8,7 @@ export interface ChatMessage {
 export interface Chat {
   id: string;
   name: string;
-  messages: ChatMessage[];
+  messages: Array<ChatMessage>;
   created_at: string;
   updated_at: string;
 }

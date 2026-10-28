@@ -131,6 +131,7 @@ async def get_chat(chat_id: str):
 
 
 @app.post("/chats/{chat_id}/stream", response_model=ChatMessage)
+
 async def send_message(chat_id: str, request: SendMessageRequest):
     """Send a message to a chat and get assistant response"""
     if chat_id not in chats_data:
@@ -161,6 +162,10 @@ async def send_message(chat_id: str, request: SendMessageRequest):
     
     # Save updated chat back to JSON
     save_chats_to_json()
+    
+    # Add realistic delay to simulate AI thinking time
+    import asyncio
+    await asyncio.sleep(1.0)  # 1 second delay
     
     return assistant_message
 

@@ -1,4 +1,4 @@
-import type { Chat, ChatMessage, SendMessageRequest, UpdateChatRequest } from '../types/index.ts';
+import type { Chat, ChatMessage, SendMessageRequest } from '../types/index.ts';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -24,11 +24,7 @@ export const chatApi = {
     return handleResponse<Array<Chat>>(response);
   },
 
-  // Get paginated chats
-  async getChatsPaginated(page: number = 1, size: number = 20) {
-    const response = await fetch(`${API_BASE_URL}/chats/paginated?page=${page}&size=${size}`);
-    return handleResponse(response);
-  },
+
 
   // Get a specific chat
   async getChat(chatId: string): Promise<Chat> {
@@ -44,17 +40,7 @@ export const chatApi = {
     return handleResponse<Chat>(response);
   },
 
-  // Update chat name
-  async updateChat(chatId: string, request: UpdateChatRequest): Promise<Chat> {
-    const response = await fetch(`${API_BASE_URL}/chats/${chatId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request),
-    });
-    return handleResponse<Chat>(response);
-  },
+  
 
   // Delete a chat
   async deleteChat(chatId: string): Promise<void> {

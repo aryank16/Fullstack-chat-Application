@@ -1,6 +1,6 @@
 import React, { createContext,  useContext, useEffect, useState } from 'react';
 import { chatApi } from '../services/api';
-import type { Chat, ChatMessage } from '../types/index.ts';
+import type { Chat } from '../types/index.ts';
 import type { ReactNode } from 'react';
 
 // Define the shape of the context
@@ -12,7 +12,6 @@ interface ChatContextType {
   loadChats: () => Promise<void>;
   selectChat: (chatId: string) => Promise<void>;
   createNewChat: (name?: string) => Promise<Chat>;
-  updateChatName: (chatId: string, name: string) => Promise<void>;
   deleteChat: (chatId: string) => Promise<void>;
   sendMessage: (content: string) => Promise<void>;
   isSendingMessage: boolean;
@@ -78,7 +77,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   };
 
 // Create a new chat
-  const createNewChat = async (name: string = 'New Chat'): Promise<Chat> => {
+  const createNewChat = async (name: string = ' '): Promise<Chat> => {
     setIsLoading(true);
     setError(null);
     
@@ -96,24 +95,6 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     }
   };
 
-// Update chat name
-  const updateChatName = async (chatId: string, name: string) => {
-    setError(null);
-    
-    try {
-      const updatedChat = await chatApi.updateChat(chatId, { name });
-      setChats(prev => prev.map(chat => 
-        chat.id === chatId ? updatedChat : chat
-      ));
-      
-      if (currentChat?.id === chatId) {
-        setCurrentChat(updatedChat);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update chat');
-      console.error('Error updating chat:', err);
-    }
-  };
 
 // Delete a chat
   const deleteChat = async (chatId: string) => {
@@ -133,23 +114,46 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   };
 
 // Send a message in the current chat
-
   const sendMessage = async (content: string) => {
     if (!currentChat || !content.trim()) return;
     
     setIsSendingMessage(true);
     setError(null);
     
+    // Create user message immediately
+    const userMessage = {
+      id: `user-${Date.now()}`,
+      type: 'user' as const,
+      content: content.trim(),
+      timestamp: new Date().toISOString(),
+    };
+    
+    // Add user message to UI immediately
+    const updatedChatWithUserMessage = {
+      ...currentChat,
+      messages: [...currentChat.messages, userMessage],
+      updated_at: new Date().toISOString(),
+    };
+    
+    setCurrentChat(updatedChatWithUserMessage);
+    setChats(prev => prev.map(chat => 
+      chat.id === currentChat.id ? updatedChatWithUserMessage : chat
+    ));
+    
     try {
-      // Send message to backend (backend will add both user and assistant messages)
+      // Send message to backend (backend will add assistant message after delay)
       const assistantMessage = await chatApi.sendMessage(currentChat.id, { content: content.trim() });
       
-      // Reload the chat to get the updated messages from backend
-      const updatedChat = await chatApi.getChat(currentChat.id);
+      // Add assistant message to UI
+      const finalUpdatedChat = {
+        ...updatedChatWithUserMessage,
+        messages: [...updatedChatWithUserMessage.messages, assistantMessage],
+        updated_at: new Date().toISOString(),
+      };
       
-      setCurrentChat(updatedChat);
+      setCurrentChat(finalUpdatedChat);
       setChats(prev => prev.map(chat => 
-        chat.id === currentChat.id ? updatedChat : chat
+        chat.id === currentChat.id ? finalUpdatedChat : chat
       ));
       
     } catch (err) {
@@ -175,7 +179,6 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     loadChats,
     selectChat,
     createNewChat,
-    updateChatName,
     deleteChat,
     sendMessage,
     isSendingMessage,
