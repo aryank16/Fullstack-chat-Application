@@ -1,4 +1,4 @@
-# Parley
+# Chat App
 
 A full-stack chat application with authentication, a conversation sidebar, quick actions and streamed assistant replies.
 

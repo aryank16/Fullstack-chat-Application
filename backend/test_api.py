@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Smoke tests for the Parley API.
+Smoke tests for the Chat App API.
 
 Start the backend first:
     uv run uvicorn src.main:app --reload --host 127.0.0.1 --port 8000

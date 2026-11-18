@@ -67,7 +67,7 @@ const AuthForm: React.FC = () => {
             <img src='/public/favicon.png'/>
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold ">
-            Parley
+            Chat App
           </h2>
           <p className="mt-2 text-center text-sm ">
             {isSignup ? 'Create your account' : 'Sign in to start chatting'}

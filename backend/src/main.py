@@ -15,7 +15,7 @@ from .models import Chat, ChatMessage, SendMessageRequest, UpdateChatRequest
 disable_installed_extensions_check()
 
 app = FastAPI(
-    title="Parley API", description="REST + streaming API for the Parley chat app", version="1.0.0"
+    title="Chat App API", description="REST + streaming API for the chat app", version="1.0.0"
 )
 
 app.add_middleware(
@@ -105,7 +105,7 @@ async def startup_event():
 
 @app.get("/")
 async def root():
-    return {"message": "Parley API is running", "total_chats": len(chats_data)}
+    return {"message": "Chat App API is running", "total_chats": len(chats_data)}
 
 
 @app.get("/chats", response_model=List[Chat])
