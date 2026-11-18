@@ -6,12 +6,12 @@ interface QuickActionsProps {
 
 const QuickActions: React.FC<QuickActionsProps> = ({ onAction }) => {
   const quickActions = [
-    "Hallo! Wie kann ich dir helfen?",
-    "Was sind die neuesten Trends im Frontend Development?",
-    "Kannst du mir bei einem React Problem helfen?",
-    "Erkläre mir TypeScript Best Practices",
-    "Wie optimiere ich die Performance einer Web App?",
-    "Was ist der beste Weg, um State zu verwalten?",
+    "Hi! What can you help me with?",
+    "What are the latest trends in frontend development?",
+    "Can you help me debug a React issue?",
+    "Explain TypeScript best practices",
+    "How do I improve the performance of a web app?",
+    "What's the best way to manage state in React?",
   ];
 
   return (

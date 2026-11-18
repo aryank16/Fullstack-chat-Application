@@ -9,7 +9,7 @@ describe('QuickActions', () => {
     render(<QuickActions onAction={mockOnAction} />);
     
     expect(screen.getByText('Quick Actions:')).toBeInTheDocument();
-    expect(screen.getByText('Hallo! Wie kann ich dir helfen?')).toBeInTheDocument();
+    expect(screen.getByText('Hi! What can you help me with?')).toBeInTheDocument();
   });
 
   it('calls onAction when button is clicked', async () => {
@@ -18,10 +18,10 @@ describe('QuickActions', () => {
     
     render(<QuickActions onAction={mockOnAction} />);
     
-    const button = screen.getByText('Hallo! Wie kann ich dir helfen?');
+    const button = screen.getByText('Hi! What can you help me with?');
     await user.click(button);
     
-    expect(mockOnAction).toHaveBeenCalledWith('Hallo! Wie kann ich dir helfen?');
+    expect(mockOnAction).toHaveBeenCalledWith('Hi! What can you help me with?');
   });
 
   it('renders all 6 quick actions', () => {

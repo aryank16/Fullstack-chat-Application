@@ -22,6 +22,5 @@ COPY --from=builder --chown=app:app /app/.venv ${VIRTUAL_ENV}
 # Copy the project into the image
 ADD data /app/data
 ADD src /app
-RUN ls
 # Run the application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
