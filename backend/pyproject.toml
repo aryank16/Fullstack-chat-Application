@@ -1,7 +1,7 @@
 [project]
-name = "backend"
+name = "parley-backend"
 version = "0.1.0"
-description = "Add your description here"
+description = "FastAPI backend for the Parley chat app"
 readme = "README.md"
 requires-python = "~=3.12"
 dependencies = [

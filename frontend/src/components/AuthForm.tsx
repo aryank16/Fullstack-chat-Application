@@ -67,10 +67,10 @@ const AuthForm: React.FC = () => {
             <img src='/public/favicon.png'/>
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold ">
-            Eraneos Analytics
+            Parley
           </h2>
           <p className="mt-2 text-center text-sm ">
-            {isSignup ? 'Create your account' : 'Sign in to access the intelligent chat assistant'}
+            {isSignup ? 'Create your account' : 'Sign in to start chatting'}
           </p>
         </div>
 

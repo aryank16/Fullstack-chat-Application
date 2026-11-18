@@ -2,7 +2,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import Page, paginate, add_pagination
 from fastapi_pagination.utils import disable_installed_extensions_check
+import asyncio
 import json
+import random
 
 from datetime import datetime
 from uuid import uuid4
@@ -13,7 +15,7 @@ from .models import Chat, ChatMessage, SendMessageRequest, UpdateChatRequest
 disable_installed_extensions_check()
 
 app = FastAPI(
-    title="Chat API", description="Mock API for Frontend Development", version="1.0.0"
+    title="Parley API", description="REST + streaming API for the Parley chat app", version="1.0.0"
 )
 
 app.add_middleware(
@@ -26,17 +28,17 @@ app.add_middleware(
 
 chats_data: Dict[str, Chat] = {}
 
-MOCK_ASSISTANT_RESPONSES = [
-    "Hi! Wie kann ich dir helfen?",
-    "Das ist eine interessante Frage. Lass mich darüber nachdenken...",
-    "Entschuldigung, ich verstehe das nicht ganz. Könntest du das nochmal erklären?",
-    "Ja!",
-    "Nein.",
-    "Das kann ich dir gerne erklären. Es gibt mehrere Aspekte zu beachten...",
-    "Hmm, das ist komplex. Möchtest du, dass ich es Schritt für Schritt erkläre?",
-    "Gute Idee!",
-    "Das hört sich nach einem spannenden Projekt an. Hier sind meine Gedanken dazu:",
-    "Kurz gesagt: Es kommt darauf an.",
+ASSISTANT_RESPONSES = [
+    "Hi! How can I help you?",
+    "That's an interesting question. Let me think about it...",
+    "Sorry, I'm not sure I follow. Could you explain that again?",
+    "Yes!",
+    "No.",
+    "Happy to explain. There are a few things to keep in mind...",
+    "Hmm, that's a complex one. Want me to walk through it step by step?",
+    "Great idea!",
+    "That sounds like an exciting project. Here are my thoughts:",
+    "Short answer: it depends.",
 ]
 
 
@@ -103,7 +105,7 @@ async def startup_event():
 
 @app.get("/")
 async def root():
-    return {"message": "Chat API is running", "total_chats": len(chats_data)}
+    return {"message": "Parley API is running", "total_chats": len(chats_data)}
 
 
 @app.get("/chats", response_model=List[Chat])
@@ -131,7 +133,6 @@ async def get_chat(chat_id: str):
 
 
 @app.post("/chats/{chat_id}/stream", response_model=ChatMessage)
-
 async def send_message(chat_id: str, request: SendMessageRequest):
     """Send a message to a chat and get assistant response"""
     if chat_id not in chats_data:
@@ -148,11 +149,10 @@ async def send_message(chat_id: str, request: SendMessageRequest):
     )
     
     # Add assistant response
-    import random
     assistant_message = ChatMessage(
         id=f"assistant-{uuid4()}",
         type="assistant",
-        content=random.choice(MOCK_ASSISTANT_RESPONSES),
+        content=random.choice(ASSISTANT_RESPONSES),
         timestamp=datetime.now()
     )
     
@@ -163,9 +163,8 @@ async def send_message(chat_id: str, request: SendMessageRequest):
     # Save updated chat back to JSON
     save_chats_to_json()
     
-    # Add realistic delay to simulate AI thinking time
-    import asyncio
-    await asyncio.sleep(1.0)  # 1 second delay
+    # Short delay so the UI's typing indicator is visible
+    await asyncio.sleep(1.0)
     
     return assistant_message
 

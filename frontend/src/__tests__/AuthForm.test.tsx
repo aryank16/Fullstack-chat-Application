@@ -23,7 +23,7 @@ describe('AuthForm', () => {
   it('renders login form by default', () => {
     render(<AuthForm />);
     
-    expect(screen.getByText('Eraneos Analytics')).toBeInTheDocument();
+    expect(screen.getByText('Parley')).toBeInTheDocument();
     expect(screen.getByLabelText('Email Address')).toBeInTheDocument();
     expect(screen.getByLabelText('Password')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument();

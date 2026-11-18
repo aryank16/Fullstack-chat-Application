@@ -48,7 +48,7 @@ const Sidebar: React.FC = () => {
       {/* Header */}
       <div className="p-4 border-b border-gray-700">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-semibold">Eraneos Chat</h1>
+          <h1 className="text-xl font-semibold">Parley</h1>
           <button
             onClick={logout}
             className="text-gray-400 hover:text-orange-400 transition-colors"
